@@ -1,0 +1,2354 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>KIBER YUGURUVCHI — Neon Dash & Skinlar</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100dvh;
+        margin: 0;
+        padding: 0;
+        background-color: #070314;
+        color: #ffffff;
+        font-family: "Rajdhani", sans-serif;
+        overflow: hidden;
+        position: fixed;
+        inset: 0;
+      }
+
+      #appRoot {
+        width: 100%;
+        height: 100dvh;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        position: relative;
+      }
+
+      h1,
+      h2,
+      h3,
+      .font-cyber {
+        font-family: "Orbitron", sans-serif;
+      }
+
+      #gameCanvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        touch-action: none;
+      }
+
+      /* Glassmorphism & Neon UI */
+      .cyber-panel {
+        background: rgba(14, 10, 32, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(0, 243, 255, 0.32);
+        box-shadow:
+          0 12px 40px rgba(0, 0, 0, 0.75),
+          inset 0 0 20px rgba(0, 243, 255, 0.08);
+      }
+
+      /* Strictly bounded modal containers */
+      .modal-bounded {
+        max-width: 92vw;
+        max-height: 88dvh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .modal-scroll-area {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+      }
+
+      /* Sleek Neon Scrollbar */
+      .modal-scroll-area::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      .modal-scroll-area::-webkit-scrollbar-track {
+        background: rgba(8, 5, 22, 0.65);
+        border-radius: 10px;
+      }
+      .modal-scroll-area::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #00f3ff, #ff007f);
+        border-radius: 10px;
+      }
+      .modal-scroll-area::-webkit-scrollbar-thumb:hover {
+        background: #00f3ff;
+      }
+
+      /* Responsive 12-Skin Grid */
+      .skins-auto-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+        gap: 0.65rem;
+      }
+
+      .neon-cyan {
+        text-shadow:
+          0 0 10px rgba(0, 243, 255, 0.8),
+          0 0 24px rgba(0, 243, 255, 0.4);
+      }
+
+      .neon-pink {
+        text-shadow:
+          0 0 10px rgba(255, 0, 128, 0.8),
+          0 0 24px rgba(255, 0, 128, 0.4);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #00f3ff 0%, #0077ff 100%);
+        color: #050211;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 900;
+        letter-spacing: 1.5px;
+        border-radius: 14px;
+        box-shadow:
+          0 0 22px rgba(0, 243, 255, 0.55),
+          inset 0 2px 4px rgba(255, 255, 255, 0.7);
+        transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+        cursor: pointer;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px) scale(1.01);
+        box-shadow:
+          0 0 32px rgba(0, 243, 255, 0.85),
+          inset 0 2px 6px rgba(255, 255, 255, 0.9);
+      }
+
+      .btn-primary:active {
+        transform: translateY(1px) scale(0.98);
+      }
+
+      .btn-secondary {
+        background: linear-gradient(135deg, #ff007f 0%, #7928ca 100%);
+        color: #ffffff;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 800;
+        letter-spacing: 1.2px;
+        border-radius: 14px;
+        box-shadow:
+          0 0 20px rgba(255, 0, 127, 0.45),
+          inset 0 2px 4px rgba(255, 255, 255, 0.4);
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      .btn-secondary:hover {
+        transform: translateY(-2px) scale(1.01);
+        box-shadow: 0 0 30px rgba(255, 0, 127, 0.75);
+      }
+
+      .btn-glass {
+        background: rgba(20, 16, 45, 0.85);
+        border: 1px solid rgba(0, 243, 255, 0.35);
+        color: #00f3ff;
+        border-radius: 12px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      .btn-glass:hover {
+        background: rgba(0, 243, 255, 0.15);
+        box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+      }
+
+      @keyframes floatSlow {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-5px);
+        }
+      }
+      .animate-float {
+        animation: floatSlow 3s infinite ease-in-out;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="appRoot">
+      <!-- Main Game Canvas -->
+      <canvas id="gameCanvas"></canvas>
+
+      <!-- Top HUD -->
+      <header
+        class="fixed top-0 left-0 w-full z-10 p-2.5 sm:p-4 flex justify-between items-start pointer-events-none gap-2"
+      >
+        <!-- Left Stats: Score & High Score -->
+        <div class="flex gap-2 sm:gap-3">
+          <div class="cyber-panel rounded-2xl px-3 py-1.5 sm:px-4 sm:py-2">
+            <div
+              class="text-[9px] sm:text-xs text-cyan-300 tracking-widest font-bold"
+            >
+              MASOFA
+            </div>
+            <div
+              id="scoreText"
+              class="font-cyber text-base sm:text-2xl font-black text-white neon-cyan"
+            >
+              0m
+            </div>
+          </div>
+          <div
+            class="cyber-panel rounded-2xl px-3 py-1.5 sm:px-4 sm:py-2 hidden sm:block"
+          >
+            <div
+              class="text-[10px] sm:text-xs text-pink-400 tracking-widest font-bold"
+            >
+              REKORD (<span id="hudDiffBadge">NORMAL</span>)
+            </div>
+            <div
+              id="highScoreText"
+              class="font-cyber text-lg sm:text-2xl font-black text-pink-200 neon-pink"
+            >
+              0m
+            </div>
+          </div>
+        </div>
+
+        <!-- Center Overdrive / Fever Meter (Visible while playing) -->
+        <div
+          id="overdriveWrapper"
+          class="hidden flex-col items-center cyber-panel rounded-2xl px-3 py-1.5 sm:px-4 sm:py-2 w-28 sm:w-48"
+        >
+          <div
+            class="flex justify-between w-full text-[9px] sm:text-xs font-bold tracking-wider mb-1"
+          >
+            <span id="overdriveLabel" class="text-cyan-300">ENERGIYA</span>
+            <span id="overdrivePercent" class="text-yellow-300">0%</span>
+          </div>
+          <div
+            class="w-full h-1.5 sm:h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-700"
+          >
+            <div
+              id="overdriveBar"
+              class="h-full bg-gradient-to-r from-cyan-400 via-pink-500 to-yellow-400 transition-all duration-150"
+              style="width: 0%"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Right Stats: Crystals & Sound Toggle -->
+        <div class="flex items-center gap-2 pointer-events-auto">
+          <div
+            class="cyber-panel rounded-2xl px-3 py-1.5 sm:px-4 sm:py-2 flex items-center gap-1.5"
+          >
+            <span class="text-sm sm:text-lg">💎</span>
+            <span
+              id="crystalText"
+              class="font-cyber text-sm sm:text-xl font-bold text-yellow-300"
+              >150</span
+            >
+          </div>
+          <button
+            id="soundBtn"
+            class="btn-glass p-2 sm:p-2.5"
+            title="Ovozni yoqish/o'chirish"
+          >
+            <svg
+              id="soundOnIcon"
+              class="w-4 h-4 sm:w-5 sm:h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
+              />
+            </svg>
+            <svg
+              id="soundOffIcon"
+              class="w-4 h-4 sm:w-5 sm:h-5 hidden text-pink-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"
+              />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- START MENU OVERLAY -->
+      <div
+        id="menuOverlay"
+        class="fixed inset-0 z-20 flex items-center justify-center p-3 sm:p-5 bg-black/50 backdrop-blur-xs"
+      >
+        <div
+          class="cyber-panel modal-bounded rounded-3xl w-full max-w-lg text-center relative"
+        >
+          <!-- Scrollable Inner Content -->
+          <div class="modal-scroll-area p-4 sm:p-7 flex flex-col">
+            <div
+              class="inline-block mx-auto px-3 py-0.5 rounded-full bg-pink-500/15 border border-pink-400/40 text-pink-300 text-[10px] sm:text-xs font-bold tracking-widest mb-1.5"
+            >
+              SYNTHWAVE NEON RUNNER
+            </div>
+            <h1
+              class="text-2xl sm:text-4xl font-black text-white neon-cyan tracking-wider leading-tight mb-1.5 animate-float"
+            >
+              KIBER
+              <span
+                class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-yellow-300"
+                >YUGURUVCHI</span
+              >
+            </h1>
+            <p class="text-slate-300 text-xs sm:text-sm mb-4">
+              Qiyinlik darajasini tanlang, to'siqlardan sakrab o'ting va
+              <span class="text-yellow-300 font-bold">12 xil Skin</span>ni
+              oching!
+            </p>
+
+            <!-- Difficulty Selector (4 Levels) -->
+            <div class="mb-4 text-left">
+              <div class="flex justify-between items-center mb-1.5 px-1">
+                <span
+                  class="text-[10px] sm:text-xs text-cyan-300 font-bold tracking-widest uppercase"
+                  >QIYINLIK DARAJASI</span
+                >
+                <span
+                  id="diffBonusLabel"
+                  class="text-[10px] sm:text-xs font-cyber font-bold text-yellow-300"
+                  >1.5x OLMOS</span
+                >
+              </div>
+              <div
+                id="difficultySelector"
+                class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2"
+              >
+                <button
+                  data-diff="easy"
+                  class="diff-btn py-2 px-1.5 rounded-xl border text-center transition cursor-pointer"
+                >
+                  <div class="font-cyber text-[10px] sm:text-xs font-black">
+                    OSON / EASY
+                  </div>
+                  <div class="text-[10px] opacity-80">
+                    Rekord: <span id="best_easy">0m</span>
+                  </div>
+                </button>
+                <button
+                  data-diff="normal"
+                  class="diff-btn py-2 px-1.5 rounded-xl border text-center transition cursor-pointer"
+                >
+                  <div class="font-cyber text-[10px] sm:text-xs font-black">
+                    O'RTACHA / NORMAL
+                  </div>
+                  <div class="text-[10px] opacity-80">
+                    Rekord: <span id="best_normal">0m</span>
+                  </div>
+                </button>
+                <button
+                  data-diff="hard"
+                  class="diff-btn py-2 px-1.5 rounded-xl border text-center transition cursor-pointer"
+                >
+                  <div class="font-cyber text-[10px] sm:text-xs font-black">
+                    QIYIN / HARD
+                  </div>
+                  <div class="text-[10px] opacity-80">
+                    Rekord: <span id="best_hard">0m</span>
+                  </div>
+                </button>
+                <button
+                  data-diff="difficult"
+                  class="diff-btn py-2 px-1.5 rounded-xl border text-center transition cursor-pointer"
+                >
+                  <div class="font-cyber text-[10px] sm:text-xs font-black">
+                    EKSTREM / DIFFICULT
+                  </div>
+                  <div class="text-[10px] opacity-80">
+                    Rekord: <span id="best_difficult">0m</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Active Skin Mini Badge -->
+            <div
+              class="bg-slate-900/80 border border-cyan-500/30 rounded-2xl p-2.5 sm:p-3 mb-4 flex items-center justify-between gap-2"
+            >
+              <div class="flex items-center gap-2.5 min-w-0">
+                <canvas
+                  id="menuSkinPreview"
+                  width="44"
+                  height="44"
+                  class="rounded-xl bg-slate-950/90 border border-slate-700 shrink-0"
+                ></canvas>
+                <div class="text-left truncate">
+                  <div class="text-[10px] text-slate-400 uppercase font-bold">
+                    TANLANGAN SKIN
+                  </div>
+                  <div
+                    id="activeSkinNameMenu"
+                    class="font-cyber text-xs sm:text-sm font-bold text-cyan-300 truncate"
+                  >
+                    Kiber Ko'k
+                  </div>
+                </div>
+              </div>
+              <button
+                id="openShopBtnQuick"
+                class="px-3 py-2 rounded-xl bg-pink-500/20 border border-pink-400/50 text-pink-300 text-[11px] font-cyber font-bold hover:bg-pink-500/30 transition cursor-pointer shrink-0"
+              >
+                O'ZGARTIRISH
+              </button>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col gap-2.5">
+              <button
+                id="startBtn"
+                class="btn-primary w-full py-3.5 text-base sm:text-lg"
+              >
+                O'YINNI BOSHLASH
+              </button>
+              <button
+                id="openShopBtn"
+                class="btn-secondary w-full py-3 text-sm sm:text-base flex items-center justify-center gap-2"
+              >
+                <span>🎨 SKINLAR DO'KONI (12)</span>
+              </button>
+            </div>
+
+            <!-- Controls Info -->
+            <div
+              class="mt-4 pt-3 border-t border-slate-700/60 grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[11px] sm:text-xs text-slate-300"
+            >
+              <div>
+                <span class="text-cyan-400 font-bold">SAKRASH (2x):</span>
+                Ekranga bosing / Space / ▲
+              </div>
+              <div>
+                <span class="text-pink-400 font-bold">PASTGA SHO'NG'ISH:</span>
+                Pastga suring / ▼
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SKIN SHOP MODAL OVERLAY -->
+      <div
+        id="shopOverlay"
+        class="fixed inset-0 z-30 hidden items-center justify-center p-3 sm:p-5 bg-black/75 backdrop-blur-md"
+      >
+        <div
+          class="cyber-panel modal-bounded rounded-3xl w-full max-w-3xl relative"
+        >
+          <!-- Sticky/Fixed Shop Header -->
+          <div
+            class="shrink-0 p-4 sm:px-6 sm:py-4 border-b border-slate-700/80 bg-slate-950/60 flex flex-wrap justify-between items-center gap-2"
+          >
+            <div>
+              <h2
+                class="text-lg sm:text-2xl font-black text-white neon-pink tracking-wider"
+              >
+                SKINLAR DO'KONI
+              </h2>
+              <p class="text-[11px] sm:text-xs text-slate-300">
+                12 xil noyob kiber-qahramonlardan birini tanlang
+              </p>
+            </div>
+            <div class="flex items-center gap-2 sm:gap-3">
+              <div
+                class="bg-slate-900/90 border border-yellow-400/40 rounded-xl px-3 py-1.5 flex items-center gap-1.5"
+              >
+                <span class="text-sm">💎</span>
+                <span
+                  id="shopCrystalCount"
+                  class="font-cyber text-sm sm:text-base font-bold text-yellow-300"
+                  >150</span
+                >
+              </div>
+              <button
+                id="closeShopBtn"
+                class="btn-glass px-3 py-1.5 font-cyber font-bold text-xs sm:text-sm"
+              >
+                ✕ YOPISH
+              </button>
+            </div>
+          </div>
+
+          <!-- Toast Message inside shop -->
+          <div
+            id="shopToast"
+            class="hidden shrink-0 mx-4 mt-3 text-center text-xs font-bold py-2 px-3 rounded-xl bg-pink-500/25 border border-pink-500 text-pink-200"
+          >
+            Olmoslar yetarli emas! Ko'proq olmos yig'ing 💎
+          </div>
+
+          <!-- Scrollable Shop Body -->
+          <div class="modal-scroll-area p-4 sm:p-6 flex-1">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+              <!-- Live Preview Card -->
+              <div
+                class="md:col-span-4 bg-slate-950/85 border border-cyan-500/30 rounded-2xl p-3.5 flex flex-row md:flex-col items-center justify-between md:justify-center text-left md:text-center gap-3 md:sticky md:top-0"
+              >
+                <canvas
+                  id="shopLivePreview"
+                  width="120"
+                  height="120"
+                  class="rounded-2xl bg-slate-900/60 border border-slate-800 shrink-0 w-20 h-20 sm:w-28 sm:h-28"
+                ></canvas>
+                <div class="min-w-0 flex-1">
+                  <div
+                    class="text-[10px] text-cyan-400 font-bold tracking-widest uppercase"
+                  >
+                    JONLI KO'RINISH
+                  </div>
+                  <h3
+                    id="previewSkinTitle"
+                    class="font-cyber text-sm sm:text-base font-bold text-white truncate mt-0.5"
+                  >
+                    Kiber Ko'k
+                  </h3>
+                  <p
+                    id="previewSkinDesc"
+                    class="text-xs text-slate-400 mt-1 line-clamp-2"
+                  >
+                    Standart plazma yadrosi va moviy iz
+                  </p>
+                </div>
+              </div>
+
+              <!-- 12 Skins Auto-Fill Grid -->
+              <div id="skinsGrid" class="md:col-span-8 skins-auto-grid">
+                <!-- Skins dynamically injected here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GAME OVER OVERLAY -->
+      <div
+        id="gameOverOverlay"
+        class="fixed inset-0 z-20 hidden items-center justify-center p-3 sm:p-5 bg-black/75 backdrop-blur-md"
+      >
+        <div
+          class="cyber-panel modal-bounded rounded-3xl w-full max-w-md text-center"
+        >
+          <div class="modal-scroll-area p-5 sm:p-7">
+            <h2
+              class="text-2xl sm:text-4xl font-black text-pink-500 neon-pink mb-1 tracking-wider"
+            >
+              TO'QNASHUV!
+            </h2>
+            <p
+              id="newRecordTag"
+              class="hidden inline-block px-3 py-1 rounded-full bg-yellow-400/20 border border-yellow-400 text-yellow-300 text-xs font-bold tracking-widest my-2 animate-bounce"
+            >
+              ★ YANGI REKORD O'RNATILDI! ★
+            </p>
+
+            <div class="grid grid-cols-3 gap-2 my-4">
+              <div
+                class="bg-slate-900/85 border border-cyan-500/30 rounded-2xl p-2.5"
+              >
+                <div class="text-[10px] text-cyan-300 font-bold">MASOFA</div>
+                <div
+                  id="finalDist"
+                  class="font-cyber text-base sm:text-xl font-black text-white mt-0.5"
+                >
+                  0m
+                </div>
+              </div>
+              <div
+                class="bg-slate-900/85 border border-pink-500/30 rounded-2xl p-2.5"
+              >
+                <div class="text-[10px] text-pink-400 font-bold">
+                  REKORD (<span id="overDiffLabel">NORMAL</span>)
+                </div>
+                <div
+                  id="finalBest"
+                  class="font-cyber text-base sm:text-xl font-black text-pink-300 mt-0.5"
+                >
+                  0m
+                </div>
+              </div>
+              <div
+                class="bg-slate-900/85 border border-yellow-500/30 rounded-2xl p-2.5"
+              >
+                <div class="text-[10px] text-yellow-300 font-bold">
+                  YIG'ILDI
+                </div>
+                <div
+                  id="finalCrystals"
+                  class="font-cyber text-base sm:text-xl font-black text-yellow-300 mt-0.5"
+                >
+                  +0 💎
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-2.5 mt-4">
+              <button
+                id="restartBtn"
+                class="btn-primary w-full py-3.5 text-base sm:text-lg"
+              >
+                QAYTA O'YNASH
+              </button>
+              <button
+                id="gameOverShopBtn"
+                class="btn-secondary w-full py-3 text-sm sm:text-base"
+              >
+                🎨 SKINLAR DO'KONI
+              </button>
+              <button
+                id="backToMenuBtn"
+                class="btn-glass w-full py-2.5 font-cyber text-xs sm:text-sm font-bold"
+              >
+                BOSH MENYU
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /**
+       * KIBER YUGURUVCHI (Cyber Dash & Skins)
+       * To'liq moslashuvchan konteyner, 4 qiyinlik darajasi va 12 skinli Neon Dash o'yini.
+       */
+
+      // --- 1. QIYINLIK DARAJALARI (DIFFICULTY LEVELS) ---
+      const DIFFICULTIES = {
+        easy: {
+          id: "easy",
+          label: "EASY",
+          uzName: "Oson",
+          color: "#00ff88",
+          skyBottom: "#0d4a3e",
+          baseSpeed: 360,
+          speedGrowth: 0.25,
+          minGap: 440,
+          maxGap: 680,
+          gemMultiplier: 1.0,
+          droneChance: 0.15,
+          tripleChance: 0.0,
+        },
+        normal: {
+          id: "normal",
+          label: "NORMAL",
+          uzName: "O'rtacha",
+          color: "#00f3ff",
+          skyBottom: "#3b0d54",
+          baseSpeed: 450,
+          speedGrowth: 0.42,
+          minGap: 340,
+          maxGap: 560,
+          gemMultiplier: 1.5,
+          droneChance: 0.28,
+          tripleChance: 0.05,
+        },
+        hard: {
+          id: "hard",
+          label: "HARD",
+          uzName: "Qiyin",
+          color: "#ff9500",
+          skyBottom: "#591c0b",
+          baseSpeed: 540,
+          speedGrowth: 0.58,
+          minGap: 280,
+          maxGap: 470,
+          gemMultiplier: 2.0,
+          droneChance: 0.38,
+          tripleChance: 0.18,
+        },
+        difficult: {
+          id: "difficult",
+          label: "DIFFICULT",
+          uzName: "Ekstrem",
+          color: "#ff0044",
+          skyBottom: "#5c0519",
+          baseSpeed: 640,
+          speedGrowth: 0.78,
+          minGap: 245,
+          maxGap: 410,
+          gemMultiplier: 3.0,
+          droneChance: 0.45,
+          tripleChance: 0.3,
+        },
+      };
+
+      // --- 2. SKINLAR MA'LUMOTLAR BAZASI (12 TA NOYOB SKIN) ---
+      const SKINS = [
+        {
+          id: "cyber_cyan",
+          name: "Kiber Ko'k",
+          desc: "Standart plazma yadrosi va moviy iz",
+          price: 0,
+          primary: "#00f3ff",
+          secondary: "#0066ff",
+          core: "#ffffff",
+          shape: "orb",
+        },
+        {
+          id: "solar_blaze",
+          name: "Olovli Ajdar",
+          desc: "Qizigan olmos shakli va uchqunli iz",
+          price: 50,
+          primary: "#ff6a00",
+          secondary: "#ffea00",
+          core: "#fff3b0",
+          shape: "diamond",
+        },
+        {
+          id: "toxic_viper",
+          name: "Zaharli Ilon",
+          desc: "Kislotali yashil oltiburchak qalqon",
+          price: 100,
+          primary: "#00ff66",
+          secondary: "#008f39",
+          core: "#ccffdd",
+          shape: "hexagon",
+        },
+        {
+          id: "phantom_void",
+          name: "Binafsha Arvoh",
+          desc: "Tez aylanuvchi kiber-shuriken yulduzi",
+          price: 200,
+          primary: "#d946ef",
+          secondary: "#7e22ce",
+          core: "#fae8ff",
+          shape: "shuriken",
+        },
+        {
+          id: "ice_crystal",
+          name: "Muz Kristali",
+          desc: "Muzlagan qor parchasi va sovuq nur",
+          price: 300,
+          primary: "#7dd3fc",
+          secondary: "#0284c7",
+          core: "#f0f9ff",
+          shape: "snowflake",
+        },
+        {
+          id: "golden_sovereign",
+          name: "Oltin Qirol",
+          desc: "Shohona oltin toj va zarhal nurlar",
+          price: 400,
+          primary: "#ffd700",
+          secondary: "#ff8c00",
+          core: "#ffffff",
+          shape: "crown",
+        },
+        {
+          id: "blood_samurai",
+          name: "Qonli Samuray",
+          desc: "O'tkir qirmizi yarim oy va katana izi",
+          price: 550,
+          primary: "#ff1e56",
+          secondary: "#800020",
+          core: "#ffd1dc",
+          shape: "samurai",
+        },
+        {
+          id: "thunder_volt",
+          name: "Elektr Bo'roni",
+          desc: "Yuqori kuchlanishli chaqmoq yadrosi",
+          price: 700,
+          primary: "#facc15",
+          secondary: "#38bdf8",
+          core: "#ffffff",
+          shape: "bolt",
+        },
+        {
+          id: "cosmic_hole",
+          name: "Kosmik Teshik",
+          desc: "Gravitatsion qora tuynuk va halqa",
+          price: 900,
+          primary: "#a855f7",
+          secondary: "#1e1b4b",
+          core: "#000000",
+          shape: "blackhole",
+        },
+        {
+          id: "cyber_ninja",
+          name: "Kiber Ninja",
+          desc: "Yashirin kiber-niqob va yonuvchi ko'zlar",
+          price: 1150,
+          primary: "#f43f5e",
+          secondary: "#1e293b",
+          core: "#ffffff",
+          shape: "ninja",
+        },
+        {
+          id: "sun_deity",
+          name: "Quyosh Xudosi",
+          desc: "Yorqin quyosh nurlari va olovli toj",
+          price: 1500,
+          primary: "#fb923c",
+          secondary: "#fef08a",
+          core: "#ffffff",
+          shape: "sun",
+        },
+        {
+          id: "chroma_glitch",
+          name: "Kamalak Xaos",
+          desc: "Barcha ranglarda tovlanuvchi RGB kub",
+          price: 2000,
+          primary: "#ff007f",
+          secondary: "#00f3ff",
+          core: "#ffffff",
+          shape: "rainbow",
+        },
+      ];
+
+      // --- 3. SAQLANGAN MA'LUMOTLAR (LOCALSTORAGE) ---
+      let savedData = {
+        crystals: 150, // Boshlang'ich 150 olmos
+        highScores: {
+          easy: 0,
+          normal: 0,
+          hard: 0,
+          difficult: 0,
+        },
+        selectedDifficulty: "normal",
+        unlockedSkins: ["cyber_cyan"],
+        equippedSkin: "cyber_cyan",
+      };
+
+      try {
+        const raw = localStorage.getItem("kiberYuguruvchiSaveV3");
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          savedData = {
+            ...savedData,
+            ...parsed,
+            highScores: {
+              ...savedData.highScores,
+              ...(parsed.highScores || {}),
+            },
+          };
+        }
+      } catch (e) {}
+
+      function persistSave() {
+        try {
+          localStorage.setItem(
+            "kiberYuguruvchiSaveV3",
+            JSON.stringify(savedData),
+          );
+        } catch (e) {}
+      }
+
+      function getEquippedSkinObj() {
+        return SKINS.find((s) => s.id === savedData.equippedSkin) || SKINS[0];
+      }
+
+      function getActiveDiffObj() {
+        return (
+          DIFFICULTIES[savedData.selectedDifficulty] || DIFFICULTIES.normal
+        );
+      }
+
+      // --- 4. WEB AUDIO API SINTEZATOR ---
+      class SynthAudio {
+        constructor() {
+          this.ctx = null;
+          this.enabled = true;
+        }
+        init() {
+          if (!this.ctx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            this.ctx = new AudioCtx();
+          }
+          if (this.ctx.state === "suspended") this.ctx.resume();
+        }
+        jump(isDouble = false) {
+          if (!this.enabled || !this.ctx) return;
+          try {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = isDouble ? "triangle" : "sine";
+            const startFreq = isDouble ? 360 : 220;
+            const endFreq = isDouble ? 740 : 520;
+            osc.frequency.setValueAtTime(startFreq, this.ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(
+              endFreq,
+              this.ctx.currentTime + 0.16,
+            );
+
+            gain.gain.setValueAtTime(0.14, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(
+              0.001,
+              this.ctx.currentTime + 0.16,
+            );
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.16);
+          } catch (e) {}
+        }
+        dashDown() {
+          if (!this.enabled || !this.ctx) return;
+          try {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = "sawtooth";
+            osc.frequency.setValueAtTime(420, this.ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(
+              110,
+              this.ctx.currentTime + 0.14,
+            );
+            gain.gain.setValueAtTime(0.09, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(
+              0.001,
+              this.ctx.currentTime + 0.14,
+            );
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.14);
+          } catch (e) {}
+        }
+        crystal() {
+          if (!this.enabled || !this.ctx) return;
+          try {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(987.77, this.ctx.currentTime);
+            osc.frequency.setValueAtTime(1318.51, this.ctx.currentTime + 0.06);
+            gain.gain.setValueAtTime(0.11, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(
+              0.001,
+              this.ctx.currentTime + 0.22,
+            );
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.22);
+          } catch (e) {}
+        }
+        overdrive() {
+          if (!this.enabled || !this.ctx) return;
+          try {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = "sawtooth";
+            osc.frequency.setValueAtTime(220, this.ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(
+              880,
+              this.ctx.currentTime + 0.4,
+            );
+            gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(
+              0.001,
+              this.ctx.currentTime + 0.4,
+            );
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.4);
+          } catch (e) {}
+        }
+        buyOrEquip() {
+          if (!this.enabled || !this.ctx) return;
+          try {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(523.25, this.ctx.currentTime);
+            osc.frequency.setValueAtTime(659.25, this.ctx.currentTime + 0.07);
+            osc.frequency.setValueAtTime(783.99, this.ctx.currentTime + 0.14);
+            gain.gain.setValueAtTime(0.14, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(
+              0.001,
+              this.ctx.currentTime + 0.28,
+            );
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.28);
+          } catch (e) {}
+        }
+        crash() {
+          if (!this.enabled || !this.ctx) return;
+          try {
+            const duration = 0.4;
+            const bufferSize = this.ctx.sampleRate * duration;
+            const buffer = this.ctx.createBuffer(
+              1,
+              bufferSize,
+              this.ctx.sampleRate,
+            );
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++)
+              data[i] = Math.random() * 2 - 1;
+
+            const noise = this.ctx.createBufferSource();
+            noise.buffer = buffer;
+
+            const filter = this.ctx.createBiquadFilter();
+            filter.type = "lowpass";
+            filter.frequency.setValueAtTime(700, this.ctx.currentTime);
+            filter.frequency.exponentialRampToValueAtTime(
+              40,
+              this.ctx.currentTime + duration,
+            );
+
+            const gain = this.ctx.createGain();
+            gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(
+              0.001,
+              this.ctx.currentTime + duration,
+            );
+
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.ctx.destination);
+            noise.start();
+          } catch (e) {}
+        }
+      }
+
+      const audio = new SynthAudio();
+
+      // --- 5. SKIN CHIZISH FUNKSIYASI ---
+      function renderSkinCharacter(
+        targetCtx,
+        skin,
+        x,
+        y,
+        radius,
+        rotation,
+        time,
+        scaleY = 1,
+      ) {
+        targetCtx.save();
+        targetCtx.translate(x, y);
+        targetCtx.scale(1, scaleY);
+        targetCtx.rotate(rotation);
+
+        let primary = skin.primary;
+        let secondary = skin.secondary;
+
+        if (skin.shape === "rainbow") {
+          const hue = (time * 180) % 360;
+          primary = `hsl(${hue}, 100%, 55%)`;
+          secondary = `hsl(${(hue + 120) % 360}, 100%, 50%)`;
+        }
+
+        targetCtx.shadowColor = primary;
+        targetCtx.shadowBlur = 18;
+        targetCtx.strokeStyle = primary;
+        targetCtx.lineWidth = 3;
+
+        if (skin.shape === "orb") {
+          const grad = targetCtx.createRadialGradient(0, 0, 2, 0, 0, radius);
+          grad.addColorStop(0, skin.core);
+          grad.addColorStop(0.5, primary);
+          grad.addColorStop(1, secondary);
+          targetCtx.fillStyle = grad;
+          targetCtx.beginPath();
+          targetCtx.arc(0, 0, radius, 0, Math.PI * 2);
+          targetCtx.fill();
+          targetCtx.stroke();
+
+          targetCtx.strokeStyle = "#ffffff";
+          targetCtx.lineWidth = 1.5;
+          targetCtx.beginPath();
+          targetCtx.ellipse(
+            0,
+            0,
+            radius * 1.25,
+            radius * 0.45,
+            Math.sin(time * 4) * 0.5,
+            0,
+            Math.PI * 2,
+          );
+          targetCtx.stroke();
+        } else if (skin.shape === "diamond") {
+          targetCtx.fillStyle = "#1a0800";
+          targetCtx.beginPath();
+          targetCtx.moveTo(0, -radius * 1.25);
+          targetCtx.lineTo(radius * 1.05, 0);
+          targetCtx.lineTo(0, radius * 1.25);
+          targetCtx.lineTo(-radius * 1.05, 0);
+          targetCtx.closePath();
+          targetCtx.fill();
+          targetCtx.stroke();
+
+          targetCtx.fillStyle = secondary;
+          targetCtx.beginPath();
+          targetCtx.moveTo(0, -radius * 0.6);
+          targetCtx.lineTo(radius * 0.5, 0);
+          targetCtx.lineTo(0, radius * 0.6);
+          targetCtx.lineTo(-radius * 0.5, 0);
+          targetCtx.closePath();
+          targetCtx.fill();
+        } else if (skin.shape === "hexagon") {
+          targetCtx.fillStyle = "#031a0c";
+          targetCtx.beginPath();
+          for (let i = 0; i < 6; i++) {
+            const a = (i * Math.PI) / 3;
+            const px = Math.cos(a) * radius * 1.1;
+            const py = Math.sin(a) * radius * 1.1;
+            if (i === 0) targetCtx.moveTo(px, py);
+            else targetCtx.lineTo(px, py);
+          }
+          targetCtx.closePath();
+          targetCtx.fill();
+          targetCtx.stroke();
+
+          targetCtx.fillStyle = primary;
+          targetCtx.beginPath();
+          targetCtx.arc(0, 0, radius * 0.42, 0, Math.PI * 2);
+          targetCtx.fill();
+        } else if (skin.shape === "shuriken") {
+          targetCtx.fillStyle = "#170526";
+          targetCtx.beginPath();
+          const spikes = 4;
+          for (let i = 0; i < spikes * 2; i++) {
+            const r = i % 2 === 0 ? radius * 1.3 : radius * 0.45;
+            const a = (i * Math.PI) / spikes;
+            const px = Math.cos(a) * r;
+            const py = Math.sin(a) * r;
+            if (i === 0) targetCtx.moveTo(px, py);
+            else targetCtx.lineTo(px, py);
+          }
+          targetCtx.closePath();
+          targetCtx.fill();
+          targetCtx.stroke();
+
+          targetCtx.fillStyle = skin.core;
+          targetCtx.beginPath();
+          targetCtx.arc(0, 0, 5, 0, Math.PI * 2);
+          targetCtx.fill();
+        } else if (skin.shape === "crown") {
+          targetCtx.fillStyle = "#241800";
+          targetCtx.beginPath();
+          targetCtx.arc(0, 0, radius, 0, Math.PI * 2);
+          targetCtx.fill();
+          targetCtx.stroke();
+
+          targetCtx.fillStyle = primary;
+          targetCtx.beginPath();
+          targetCtx.moveTo(-radius * 0.55, radius * 0.35);
+          targetCtx.lineTo(-radius * 0.55, -radius * 0.25);
+          targetCtx.lineTo(-radius * 0.2, 0.05 * radius);
+          targetCtx.lineTo(0, -radius * 0.45);
+          targetCtx.lineTo(radius * 0.2, 0.05 * radius);
+          targetCtx.lineTo(radius * 0.55, -radius * 0.25);
+          targetCtx.lineTo(radius * 0.55, radius * 0.35);
+          targetCtx.closePath();
+          targetCtx.fill();
+        } else if (skin.shape === "rainbow") {
+          targetCtx.fillStyle = "#0f0518";
+          targetCtx.beginPath();
+          for (let i = 0; i < 3; i++) {
+            const a = (i * Math.PI * 2) / 3 - Math.PI / 2;
+            const px = Math.cos(a) * radius * 1.25;
+            const py = Math.sin(a) * radius * 1.25;
+            if (i === 0) targetCtx.moveTo(px, py);
+            else targetCtx.lineTo(px, py);
+          }
+          targetCtx.closePath();
+          targetCtx.fill();
+          targetCtx.stroke();
+
+          targetCtx.strokeStyle = secondary;
+          targetCtx.lineWidth = 2;
+          targetCtx.beginPath();
+          targetCtx.arc(0, 0, radius * 0.45, 0, Math.PI * 2);
+          targetCtx.stroke();
+        } else if (skin.shape === "snowflake") {
+          for (let i = 0; i < 6; i++) {
+            targetCtx.save();
+            targetCtx.rotate((i * Math.PI) / 3);
+            targetCtx.beginPath();
+            targetCtx.moveTo(0, 0);
+            targetCtx.lineTo(0, -radius * 1.2);
+            targetCtx.moveTo(-radius * 0.3, -radius * 0.75);
+            targetCtx.lineTo(0, -radius * 0.55);
+            targetCtx.lineTo(radius * 0.3, -radius * 0.75);
+            targetCtx.stroke();
+            targetCtx.restore();
+          }
+          targetCtx.fillStyle = skin.core;
+          targetCtx.beginPath();
+          targetCtx.arc(0, 0, radius * 0.28, 0, Math.PI * 2);
+          targetCtx.fill();
+        } else if (skin.shape === "samurai") {
+          targetCtx.fillStyle = "#1f030b";
+          targetCtx.beginPath();
+          targetCtx.arc(0, 0, radius * 1.05, 0, Math.PI * 2);
+          targetCtx.fill();
+          targetCtx.stroke();
+
+          targetCtx.fillStyle = primary;
+          targetCtx.beginPath();
+          targetCtx.arc(-2, 0, radius * 0.75, -0.7, 0.7, false);
+          targetCtx.arc(4, 0, radius * 0.65, 0.7, -0.7, true);
+          targetCtx.closePath();
+          targetCtx.fill();
+        } else if (skin.shape === "bolt") {
+          targetCtx.fillStyle = "#0c192c";
+          targetCtx.beginPath();
+          targetCtx.arc(0, 0, radius * 1.05, 0, Math.PI * 2);
+          targetCtx.fill();
+          targetCtx.stroke();
+
+          targetCtx.fillStyle = primary;
+          targetCtx.beginPath();
+          targetCtx.moveTo(2, -radius * 0.8);
+          targetCtx.lineTo(-radius * 0.45, 2);
+          targetCtx.lineTo(0, 2);
+          targetCtx.lineTo(-2, radius * 0.8);
+          targetCtx.lineTo(radius * 0.45, -2);
+          targetCtx.lineTo(0, -2);
+          targetCtx.closePath();
+          targetCtx.fill();
+        } else if (skin.shape === "blackhole") {
+          targetCtx.strokeStyle = primary;
+          targetCtx.lineWidth = 2.5;
+          targetCtx.beginPath();
+          targetCtx.ellipse(
+            0,
+            0,
+            radius * 1.35,
+            radius * 0.45,
+            0.35,
+            0,
+            Math.PI * 2,
+          );
+          targetCtx.stroke();
+
+          targetCtx.fillStyle = "#000000";
+          targetCtx.beginPath();
+          targetCtx.arc(0, 0, radius * 0.78, 0, Math.PI * 2);
+          targetCtx.fill();
+          targetCtx.stroke();
+        } else if (skin.shape === "ninja") {
+          targetCtx.fillStyle = "#0f172a";
+          targetCtx.beginPath();
+          targetCtx.roundRect(
+            -radius * 0.9,
+            -radius * 0.9,
+            radius * 1.8,
+            radius * 1.8,
+            8,
+          );
+          targetCtx.fill();
+          targetCtx.stroke();
+
+          targetCtx.fillStyle = primary;
+          targetCtx.fillRect(
+            -radius * 0.65,
+            -radius * 0.22,
+            radius * 1.3,
+            radius * 0.32,
+          );
+        } else if (skin.shape === "sun") {
+          const rays = 8;
+          targetCtx.fillStyle = primary;
+          for (let i = 0; i < rays; i++) {
+            targetCtx.save();
+            targetCtx.rotate((i * Math.PI * 2) / rays);
+            targetCtx.beginPath();
+            targetCtx.moveTo(-4, -radius * 0.85);
+            targetCtx.lineTo(0, -radius * 1.35);
+            targetCtx.lineTo(4, -radius * 0.85);
+            targetCtx.closePath();
+            targetCtx.fill();
+            targetCtx.restore();
+          }
+          targetCtx.fillStyle = secondary;
+          targetCtx.beginPath();
+          targetCtx.arc(0, 0, radius * 0.75, 0, Math.PI * 2);
+          targetCtx.fill();
+          targetCtx.stroke();
+        }
+
+        targetCtx.restore();
+      }
+
+      // --- 6. CANVAS VA RESIZEOBSERVER BILAN ANIQ O'LCHAM BOSHQARUVI ---
+      const appRoot = document.getElementById("appRoot");
+      const canvas = document.getElementById("gameCanvas");
+      const ctx = canvas.getContext("2d");
+
+      let width = window.innerWidth;
+      let height = window.innerHeight;
+      let groundY = height * 0.78;
+      let gameState = "MENU"; // MENU, PLAYING, GAMEOVER
+      let gameTime = 0;
+      let distance = 0;
+      let runCrystals = 0;
+      let baseSpeed = 430;
+      let currentSpeed = 430;
+      let screenShake = 0;
+
+      // Overdrive rejimi
+      let overdriveCharge = 0;
+      let isOverdrive = false;
+      let overdriveTimer = 0;
+
+      let player = null;
+      let obstacles = [];
+      let crystals = [];
+      let nextSpawnX = 600;
+
+      function resizeCanvasToContainer() {
+        const rect = appRoot.getBoundingClientRect();
+        const newW = Math.max(1, rect.width || window.innerWidth);
+        const newH = Math.max(1, rect.height || window.innerHeight);
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        const prevGroundY = groundY || newH * 0.78;
+
+        width = newW;
+        height = newH;
+        groundY = height * 0.78;
+
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        if (player) {
+          const distFromGround = prevGroundY - (player.y + player.radius);
+          player.radius = width < 640 ? 20 : 24;
+          player.x = width < 640 ? 85 : 160;
+          if (distFromGround <= 4) {
+            player.y = groundY - player.radius;
+          } else {
+            player.y = Math.min(
+              groundY - player.radius,
+              groundY - player.radius - distFromGround,
+            );
+          }
+        }
+      }
+
+      if (typeof ResizeObserver !== "undefined") {
+        const ro = new ResizeObserver(() => resizeCanvasToContainer());
+        ro.observe(appRoot);
+      }
+      window.addEventListener("resize", resizeCanvasToContainer);
+      resizeCanvasToContainer();
+
+      // --- 7. O'YINCHI KLASSI ---
+      class RunnerPlayer {
+        constructor() {
+          this.radius = width < 640 ? 20 : 24;
+          this.x = width < 640 ? 85 : 160;
+          this.y = groundY - this.radius;
+          this.vy = 0;
+          this.gravity = 2350;
+          this.jumpForce = -790;
+          this.doubleJumpForce = -710;
+          this.jumpsLeft = 2;
+          this.rotation = 0;
+          this.scaleY = 1;
+          this.trail = [];
+          this.isFastDropping = false;
+        }
+
+        jump() {
+          if (this.jumpsLeft > 0) {
+            const isDouble = this.jumpsLeft === 1;
+            this.vy = isDouble ? this.doubleJumpForce : this.jumpForce;
+            this.jumpsLeft--;
+            this.isFastDropping = false;
+            this.scaleY = 1.25;
+            audio.jump(isDouble);
+
+            const skin = getEquippedSkinObj();
+            spawnParticles(
+              this.x,
+              this.y + this.radius,
+              skin.primary,
+              isDouble ? 14 : 9,
+            );
+          }
+        }
+
+        fastDrop() {
+          if (this.y < groundY - this.radius - 5) {
+            this.vy = 1150;
+            this.isFastDropping = true;
+            audio.dashDown();
+          } else {
+            this.scaleY = 0.65;
+          }
+        }
+
+        update(dt) {
+          this.vy += this.gravity * dt;
+          this.y += this.vy * dt;
+
+          if (this.y >= groundY - this.radius) {
+            if (this.isFastDropping) {
+              screenShake = 8;
+              const skin = getEquippedSkinObj();
+              spawnParticles(this.x, groundY, skin.primary, 12);
+              this.isFastDropping = false;
+            }
+            this.y = groundY - this.radius;
+            this.vy = 0;
+            this.jumpsLeft = 2;
+            this.rotation += (currentSpeed / 45) * dt;
+          } else {
+            this.rotation += (this.jumpsLeft === 0 ? 11 : 6) * dt;
+          }
+
+          this.scaleY += (1 - this.scaleY) * Math.min(1, dt * 14);
+
+          const skin = getEquippedSkinObj();
+          let trailColor = skin.primary;
+          if (skin.shape === "rainbow") {
+            trailColor = `hsl(${(gameTime * 220) % 360}, 100%, 55%)`;
+          }
+          if (isOverdrive) trailColor = "#ffea00";
+
+          this.trail.unshift({
+            x: this.x,
+            y: this.y,
+            color: trailColor,
+            alpha: 0.85,
+          });
+          if (this.trail.length > 18) this.trail.pop();
+          this.trail.forEach((t) => {
+            t.x -= currentSpeed * dt;
+            t.alpha -= 2.8 * dt;
+          });
+          this.trail = this.trail.filter((t) => t.alpha > 0);
+        }
+
+        draw() {
+          const skin = getEquippedSkinObj();
+
+          if (this.trail.length > 1) {
+            for (let i = 0; i < this.trail.length - 1; i++) {
+              const pt = this.trail[i];
+              ctx.save();
+              ctx.globalAlpha = Math.max(0, pt.alpha * 0.6);
+              ctx.fillStyle = pt.color;
+              ctx.shadowColor = pt.color;
+              ctx.shadowBlur = 12;
+              const r = this.radius * (1 - i / this.trail.length) * 0.85;
+              ctx.beginPath();
+              ctx.arc(pt.x, pt.y, Math.max(2, r), 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+            }
+          }
+
+          if (isOverdrive) {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.strokeStyle = "#ffea00";
+            ctx.shadowColor = "#ffea00";
+            ctx.shadowBlur = 25;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(
+              0,
+              0,
+              this.radius + 10 + Math.sin(gameTime * 20) * 3,
+              0,
+              Math.PI * 2,
+            );
+            ctx.stroke();
+            ctx.restore();
+          }
+
+          renderSkinCharacter(
+            ctx,
+            skin,
+            this.x,
+            this.y,
+            this.radius,
+            this.rotation,
+            gameTime,
+            this.scaleY,
+          );
+        }
+      }
+
+      player = new RunnerPlayer();
+
+      // --- 8. TO'SIQLAR VA OLMOSLAR ---
+      class Obstacle {
+        constructor(x, diffObj) {
+          this.x = x;
+          const rand = Math.random();
+
+          if (rand < diffObj.tripleChance) {
+            this.type = "triple_spike";
+            this.w = 88;
+            this.h = 42;
+            this.y = groundY - this.h;
+            this.color = "#ff0044";
+          } else if (rand < diffObj.tripleChance + diffObj.droneChance) {
+            this.type = "drone";
+            this.w = 46;
+            this.h = 30;
+            const high = Math.random() > 0.45;
+            this.baseOffset = high ? 95 : 45;
+            this.y = groundY - this.baseOffset;
+            this.color = "#a855f7";
+            this.phase = Math.random() * Math.PI * 2;
+          } else if (rand < 0.78) {
+            this.type = "double_spike";
+            this.w = 64;
+            this.h = 42;
+            this.y = groundY - this.h;
+            this.color = "#ff2a5f";
+          } else {
+            this.type = "spike";
+            this.w = 34;
+            this.h = 46;
+            this.y = groundY - this.h;
+            this.color = "#ff007f";
+          }
+          this.passed = false;
+        }
+
+        update(dt) {
+          this.x -= currentSpeed * dt;
+          if (this.type === "drone") {
+            this.y =
+              groundY -
+              this.baseOffset +
+              Math.sin(gameTime * 5 + this.phase) * 14;
+          } else {
+            this.y = groundY - this.h;
+          }
+        }
+
+        draw() {
+          ctx.save();
+          ctx.shadowColor = this.color;
+          ctx.shadowBlur = 16;
+          ctx.strokeStyle = this.color;
+          ctx.fillStyle = "#14051d";
+          ctx.lineWidth = 2.5;
+
+          if (this.type === "spike") {
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y + this.h);
+            ctx.lineTo(this.x + this.w / 2, this.y);
+            ctx.lineTo(this.x + this.w, this.y + this.h);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(this.x + this.w / 2, this.y + 10);
+            ctx.lineTo(this.x + this.w / 2, this.y + this.h - 4);
+            ctx.stroke();
+          } else if (
+            this.type === "double_spike" ||
+            this.type === "triple_spike"
+          ) {
+            const count = this.type === "triple_spike" ? 3 : 2;
+            const partW = this.w / count;
+            for (let i = 0; i < count; i++) {
+              const ox = this.x + i * partW;
+              ctx.beginPath();
+              ctx.moveTo(ox, this.y + this.h);
+              ctx.lineTo(ox + partW / 2, this.y);
+              ctx.lineTo(ox + partW, this.y + this.h);
+              ctx.closePath();
+              ctx.fill();
+              ctx.stroke();
+            }
+          } else {
+            const cx = this.x + this.w / 2;
+            const cy = this.y + this.h / 2;
+            ctx.beginPath();
+            ctx.roundRect(this.x, this.y + 5, this.w, this.h - 10, 8);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = "#ff0055";
+            ctx.beginPath();
+            ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.restore();
+        }
+
+        getHitbox() {
+          return {
+            x: this.x + 6,
+            y: this.y + 6,
+            w: this.w - 12,
+            h: this.h - 8,
+          };
+        }
+      }
+
+      class Crystal {
+        constructor(x, offsetFromGround) {
+          this.x = x;
+          this.offsetFromGround = offsetFromGround;
+          this.y = groundY - offsetFromGround;
+          this.radius = 12;
+          this.collected = false;
+          this.bobOffset = Math.random() * Math.PI * 2;
+        }
+        update(dt) {
+          this.x -= currentSpeed * dt;
+          this.y = groundY - this.offsetFromGround;
+        }
+        draw() {
+          if (this.collected) return;
+          const drawY = this.y + Math.sin(gameTime * 6 + this.bobOffset) * 5;
+          ctx.save();
+          ctx.translate(this.x, drawY);
+          ctx.shadowColor = "#00f3ff";
+          ctx.shadowBlur = 15;
+          ctx.fillStyle = "#00f3ff";
+          ctx.strokeStyle = "#ffffff";
+          ctx.lineWidth = 1.5;
+
+          ctx.beginPath();
+          ctx.moveTo(0, -this.radius);
+          ctx.lineTo(this.radius * 0.85, 0);
+          ctx.lineTo(0, this.radius);
+          ctx.lineTo(-this.radius * 0.85, 0);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.restore();
+        }
+      }
+
+      // --- 9. ZARRACHALAR VA SYNTHWAVE ORQA FON ---
+      let particles = [];
+      function spawnParticles(x, y, color, count = 12) {
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 240 + 60;
+          particles.push({
+            x,
+            y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - 60,
+            color,
+            alpha: 1,
+            size: Math.random() * 4 + 2,
+          });
+        }
+      }
+
+      const mountains = [];
+      for (let i = 0; i < 16; i++) {
+        mountains.push({
+          x: i * 160,
+          w: 220 + Math.random() * 120,
+          h: 90 + Math.random() * 110,
+        });
+      }
+
+      function drawSynthwaveBackground(dt) {
+        const diff = getActiveDiffObj();
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, groundY);
+        skyGrad.addColorStop(0, "#060212");
+        skyGrad.addColorStop(0.55, "#190836");
+        skyGrad.addColorStop(1, diff.skyBottom);
+        ctx.fillStyle = skyGrad;
+        ctx.fillRect(0, 0, width, groundY);
+
+        // Retro Quyosh
+        const sunX = width * 0.68;
+        const sunY = groundY * 0.46;
+        const sunR = Math.min(width, height) * 0.16;
+
+        const sunGrad = ctx.createLinearGradient(
+          sunX,
+          sunY - sunR,
+          sunX,
+          sunY + sunR,
+        );
+        sunGrad.addColorStop(0, "#ffea00");
+        sunGrad.addColorStop(0.5, "#ff007f");
+        sunGrad.addColorStop(1, "#7928ca");
+
+        ctx.save();
+        ctx.shadowColor = "#ff007f";
+        ctx.shadowBlur = 40;
+        ctx.fillStyle = sunGrad;
+        ctx.beginPath();
+        ctx.arc(sunX, sunY, sunR, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#1b0838";
+        for (let i = 0; i < 6; i++) {
+          const stripeY = sunY + i * sunR * 0.16;
+          const stripeH = 2 + i * 1.3;
+          if (stripeY < sunY + sunR) {
+            ctx.fillRect(sunX - sunR, stripeY, sunR * 2, stripeH);
+          }
+        }
+        ctx.restore();
+
+        // Neon Tog'lar
+        ctx.save();
+        mountains.forEach((m) => {
+          if (gameState === "PLAYING") {
+            m.x -= currentSpeed * 0.12 * dt;
+            if (m.x + m.w < 0) {
+              m.x = width + Math.random() * 80;
+            }
+          }
+          ctx.fillStyle = "#0c0521";
+          ctx.strokeStyle = "rgba(255, 0, 127, 0.35)";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(m.x, groundY);
+          ctx.lineTo(m.x + m.w * 0.5, groundY - m.h);
+          ctx.lineTo(m.x + m.w, groundY);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+        });
+        ctx.restore();
+
+        // Perspektiv Neon Grid Yer
+        const floorGrad = ctx.createLinearGradient(0, groundY, 0, height);
+        floorGrad.addColorStop(0, "#12062b");
+        floorGrad.addColorStop(1, "#04010a");
+        ctx.fillStyle = floorGrad;
+        ctx.fillRect(0, groundY, width, height - groundY);
+
+        ctx.save();
+        const lineColor = isOverdrive ? "#ffea00" : diff.color;
+        ctx.strokeStyle = lineColor;
+        ctx.shadowColor = lineColor;
+        ctx.shadowBlur = 18;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(0, groundY);
+        ctx.lineTo(width, groundY);
+        ctx.stroke();
+
+        ctx.strokeStyle = isOverdrive
+          ? "rgba(255, 234, 0, 0.25)"
+          : "rgba(0, 243, 255, 0.22)";
+        ctx.lineWidth = 1.5;
+        const spacing = 70;
+        const offset = (distance * 12) % spacing;
+        for (let x = -offset; x < width + spacing; x += spacing) {
+          ctx.beginPath();
+          ctx.moveTo(x, groundY);
+          ctx.lineTo(x - (width / 2 - x) * 0.45, height);
+          ctx.stroke();
+        }
+
+        for (let row = 1; row <= 4; row++) {
+          const ry = groundY + Math.pow(row / 4, 1.5) * (height - groundY);
+          ctx.beginPath();
+          ctx.moveTo(0, ry);
+          ctx.lineTo(width, ry);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      // --- 10. O'YIN JARAYONI VA LOGIKASI ---
+      const scoreText = document.getElementById("scoreText");
+      const highScoreText = document.getElementById("highScoreText");
+      const crystalText = document.getElementById("crystalText");
+      const shopCrystalCount = document.getElementById("shopCrystalCount");
+      const overdriveWrapper = document.getElementById("overdriveWrapper");
+      const overdriveBar = document.getElementById("overdriveBar");
+      const overdrivePercent = document.getElementById("overdrivePercent");
+      const overdriveLabel = document.getElementById("overdriveLabel");
+
+      const menuOverlay = document.getElementById("menuOverlay");
+      const shopOverlay = document.getElementById("shopOverlay");
+      const gameOverOverlay = document.getElementById("gameOverOverlay");
+
+      function syncHUD() {
+        const diff = getActiveDiffObj();
+        crystalText.textContent = savedData.crystals;
+        if (shopCrystalCount) shopCrystalCount.textContent = savedData.crystals;
+        document.getElementById("hudDiffBadge").textContent = diff.label;
+        highScoreText.textContent =
+          Math.floor(savedData.highScores[diff.id] || 0) + "m";
+
+        ["easy", "normal", "hard", "difficult"].forEach((k) => {
+          const el = document.getElementById(`best_${k}`);
+          if (el)
+            el.textContent = Math.floor(savedData.highScores[k] || 0) + "m";
+        });
+
+        const eq = getEquippedSkinObj();
+        document.getElementById("activeSkinNameMenu").textContent = eq.name;
+        updateDifficultyUI();
+      }
+
+      function updateDifficultyUI() {
+        const activeDiff = getActiveDiffObj();
+        document.getElementById("diffBonusLabel").textContent =
+          `${activeDiff.gemMultiplier.toFixed(1)}x OLMOS`;
+        document.getElementById("diffBonusLabel").style.color =
+          activeDiff.color;
+
+        document.querySelectorAll(".diff-btn").forEach((btn) => {
+          const dKey = btn.getAttribute("data-diff");
+          const dObj = DIFFICULTIES[dKey];
+          if (dKey === savedData.selectedDifficulty) {
+            btn.style.borderColor = dObj.color;
+            btn.style.backgroundColor = "rgba(15, 23, 42, 0.95)";
+            btn.style.color = dObj.color;
+            btn.style.boxShadow = `0 0 14px ${dObj.color}55`;
+          } else {
+            btn.style.borderColor = "rgba(71, 85, 105, 0.5)";
+            btn.style.backgroundColor = "rgba(15, 23, 42, 0.55)";
+            btn.style.color = "#94a3b8";
+            btn.style.boxShadow = "none";
+          }
+        });
+      }
+      syncHUD();
+
+      function spawnWave() {
+        const diff = getActiveDiffObj();
+        const obs = new Obstacle(nextSpawnX, diff);
+        obstacles.push(obs);
+
+        if (Math.random() < 0.78) {
+          const count = 2 + Math.floor(Math.random() * 3);
+          const arcHigh = obs.type !== "drone";
+          for (let i = 0; i < count; i++) {
+            const cx = nextSpawnX + i * 36 - 10;
+            const offsetFromGround = arcHigh
+              ? 95 + Math.sin((i / count) * Math.PI) * 35
+              : 30;
+            crystals.push(new Crystal(cx, offsetFromGround));
+          }
+        }
+
+        const speedFactor = Math.min(110, distance * 0.12);
+        const minGap = Math.max(220, diff.minGap - speedFactor);
+        const maxGap = Math.max(360, diff.maxGap - speedFactor);
+        nextSpawnX += minGap + Math.random() * (maxGap - minGap);
+      }
+
+      function startNewGame() {
+        audio.init();
+        const diff = getActiveDiffObj();
+        gameState = "PLAYING";
+        distance = 0;
+        runCrystals = 0;
+        const mobileScale = width < 640 ? 0.88 : 1.0;
+        baseSpeed = diff.baseSpeed * mobileScale;
+        currentSpeed = baseSpeed;
+        overdriveCharge = 0;
+        isOverdrive = false;
+        overdriveTimer = 0;
+
+        player = new RunnerPlayer();
+        obstacles = [];
+        crystals = [];
+        particles = [];
+        nextSpawnX = width + 200;
+
+        menuOverlay.classList.add("hidden");
+        menuOverlay.classList.remove("flex");
+        gameOverOverlay.classList.add("hidden");
+        gameOverOverlay.classList.remove("flex");
+        shopOverlay.classList.add("hidden");
+        shopOverlay.classList.remove("flex");
+
+        overdriveWrapper.classList.remove("hidden");
+        overdriveWrapper.classList.add("flex");
+      }
+
+      function endGame() {
+        gameState = "GAMEOVER";
+        audio.crash();
+        screenShake = 18;
+
+        const diff = getActiveDiffObj();
+        const skin = getEquippedSkinObj();
+        spawnParticles(player.x, player.y, skin.primary, 35);
+        spawnParticles(player.x, player.y, "#ff007f", 25);
+
+        const finalMeters = Math.floor(distance);
+        let isNewBest = false;
+        if (finalMeters > (savedData.highScores[diff.id] || 0)) {
+          savedData.highScores[diff.id] = finalMeters;
+          isNewBest = true;
+        }
+        persistSave();
+        syncHUD();
+
+        overdriveWrapper.classList.add("hidden");
+        overdriveWrapper.classList.remove("flex");
+
+        document.getElementById("overDiffLabel").textContent = diff.label;
+        document.getElementById("finalDist").textContent = finalMeters + "m";
+        document.getElementById("finalBest").textContent =
+          Math.floor(savedData.highScores[diff.id]) + "m";
+        document.getElementById("finalCrystals").textContent =
+          `+${runCrystals} 💎`;
+
+        const tag = document.getElementById("newRecordTag");
+        if (isNewBest && finalMeters > 0) tag.classList.remove("hidden");
+        else tag.classList.add("hidden");
+
+        setTimeout(() => {
+          gameOverOverlay.classList.remove("hidden");
+          gameOverOverlay.classList.add("flex");
+        }, 550);
+      }
+
+      function updateGame(dt) {
+        gameTime += dt;
+
+        particles.forEach((p) => {
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+          p.vy += 400 * dt;
+          p.alpha -= 1.8 * dt;
+        });
+        particles = particles.filter((p) => p.alpha > 0);
+
+        if (gameState !== "PLAYING") return;
+
+        const diff = getActiveDiffObj();
+        const speedBonus = isOverdrive ? 1.45 : 1.0;
+        currentSpeed =
+          (baseSpeed + Math.min(520, distance * diff.speedGrowth)) * speedBonus;
+        distance += (currentSpeed * dt) / 28;
+        scoreText.textContent = Math.floor(distance) + "m";
+
+        if (isOverdrive) {
+          overdriveTimer -= dt;
+          const pct = Math.max(0, Math.ceil((overdriveTimer / 6) * 100));
+          overdriveBar.style.width = pct + "%";
+          overdrivePercent.textContent = "GIPER!";
+          overdriveLabel.textContent = "OVERDRIVE";
+          overdriveLabel.className = "text-yellow-300 animate-pulse";
+
+          if (overdriveTimer <= 0) {
+            isOverdrive = false;
+            overdriveCharge = 0;
+            overdriveLabel.textContent = "ENERGIYA";
+            overdriveLabel.className = "text-cyan-300";
+          }
+        }
+
+        player.update(dt);
+
+        nextSpawnX -= currentSpeed * dt;
+        if (nextSpawnX < width + 300) {
+          spawnWave();
+        }
+
+        const pBox = {
+          x: player.x - player.radius * 0.72,
+          y: player.y - player.radius * 0.72 * player.scaleY,
+          w: player.radius * 1.44,
+          h: player.radius * 1.44 * player.scaleY,
+        };
+
+        for (let i = 0; i < obstacles.length; i++) {
+          const obs = obstacles[i];
+          obs.update(dt);
+
+          const oBox = obs.getHitbox();
+          const hit =
+            pBox.x < oBox.x + oBox.w &&
+            pBox.x + pBox.w > oBox.x &&
+            pBox.y < oBox.y + oBox.h &&
+            pBox.y + pBox.h > oBox.y;
+
+          if (hit) {
+            if (isOverdrive) {
+              spawnParticles(
+                obs.x + obs.w / 2,
+                obs.y + obs.h / 2,
+                obs.color,
+                20,
+              );
+              obstacles.splice(i, 1);
+              i--;
+              screenShake = 6;
+              continue;
+            } else {
+              endGame();
+              return;
+            }
+          }
+        }
+        obstacles = obstacles.filter((o) => o.x + o.w > -100);
+
+        for (let i = 0; i < crystals.length; i++) {
+          const c = crystals[i];
+          c.update(dt);
+          if (!c.collected) {
+            const dist = Math.hypot(player.x - c.x, player.y - c.y);
+            if (dist < player.radius + c.radius + 8) {
+              c.collected = true;
+              const gemGain = Math.max(1, Math.round(1 * diff.gemMultiplier));
+              runCrystals += gemGain;
+              savedData.crystals += gemGain;
+              persistSave();
+              crystalText.textContent = savedData.crystals;
+              if (shopCrystalCount)
+                shopCrystalCount.textContent = savedData.crystals;
+              audio.crystal();
+              spawnParticles(c.x, c.y, "#00f3ff", 8);
+
+              if (!isOverdrive) {
+                overdriveCharge = Math.min(100, overdriveCharge + 10);
+                overdriveBar.style.width = overdriveCharge + "%";
+                overdrivePercent.textContent = overdriveCharge + "%";
+                if (overdriveCharge >= 100) {
+                  isOverdrive = true;
+                  overdriveTimer = 6;
+                  audio.overdrive();
+                  screenShake = 10;
+                }
+              }
+            }
+          }
+        }
+        crystals = crystals.filter((c) => !c.collected && c.x > -50);
+      }
+
+      function drawGame(dt) {
+        ctx.save();
+        if (screenShake > 0) {
+          ctx.translate(
+            (Math.random() - 0.5) * screenShake,
+            (Math.random() - 0.5) * screenShake,
+          );
+          screenShake *= 0.88;
+          if (screenShake < 0.5) screenShake = 0;
+        }
+
+        drawSynthwaveBackground(dt);
+
+        if (gameState === "PLAYING") {
+          crystals.forEach((c) => c.draw());
+          obstacles.forEach((o) => o.draw());
+          player.draw();
+        } else if (gameState === "MENU") {
+          const demoY = groundY - 24 + Math.sin(gameTime * 5) * 8;
+          renderSkinCharacter(
+            ctx,
+            getEquippedSkinObj(),
+            width * 0.22,
+            demoY,
+            24,
+            gameTime * 3,
+            gameTime,
+            1,
+          );
+        }
+
+        particles.forEach((p) => {
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, p.alpha);
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = p.color;
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        ctx.restore();
+      }
+
+      // --- 11. SKINLAR DO'KONI INTERFEYSI VA JONLI PREVIEW ---
+      let selectedPreviewSkinId = savedData.equippedSkin;
+      const shopLiveCanvas = document.getElementById("shopLivePreview");
+      const shopLiveCtx = shopLiveCanvas.getContext("2d");
+      const menuPreviewCanvas = document.getElementById("menuSkinPreview");
+      const menuPreviewCtx = menuPreviewCanvas.getContext("2d");
+
+      function renderSkinPreviews() {
+        menuPreviewCtx.clearRect(0, 0, 44, 44);
+        renderSkinCharacter(
+          menuPreviewCtx,
+          getEquippedSkinObj(),
+          22,
+          22,
+          13,
+          gameTime * 2,
+          gameTime,
+          1,
+        );
+
+        if (!shopOverlay.classList.contains("hidden")) {
+          shopLiveCtx.clearRect(0, 0, 120, 120);
+          const skinObj =
+            SKINS.find((s) => s.id === selectedPreviewSkinId) || SKINS[0];
+          const floatY = 60 + Math.sin(gameTime * 4) * 5;
+          renderSkinCharacter(
+            shopLiveCtx,
+            skinObj,
+            60,
+            floatY,
+            28,
+            gameTime * 2.2,
+            gameTime,
+            1,
+          );
+        }
+      }
+
+      function buildShopGrid() {
+        const grid = document.getElementById("skinsGrid");
+        grid.innerHTML = "";
+
+        SKINS.forEach((skin) => {
+          const isUnlocked = savedData.unlockedSkins.includes(skin.id);
+          const isEquipped = savedData.equippedSkin === skin.id;
+          const isSelected = selectedPreviewSkinId === skin.id;
+
+          const card = document.createElement("div");
+          card.className = `rounded-2xl p-2.5 border transition cursor-pointer flex flex-col justify-between ${
+            isSelected
+              ? "bg-slate-800/95 border-cyan-400 shadow-[0_0_15px_rgba(0,243,255,0.28)]"
+              : "bg-slate-900/75 border-slate-700/80 hover:border-slate-500"
+          }`;
+
+          card.innerHTML = `
+                    <div class="flex items-center justify-between gap-1 mb-1.5">
+                        <span class="w-3.5 h-3.5 rounded-full shrink-0" style="background:${skin.primary}; box-shadow: 0 0 8px ${skin.primary};"></span>
+                        ${
+                          isEquipped
+                            ? '<span class="text-[9px] font-cyber font-bold px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/40">FAOL</span>'
+                            : isUnlocked
+                              ? '<span class="text-[9px] font-bold text-slate-400">OCHIQ</span>'
+                              : `<span class="text-[11px] font-cyber font-bold text-yellow-300">${skin.price} 💎</span>`
+                        }
+                    </div>
+                    <div class="font-cyber text-xs font-bold text-white mb-2 truncate">${skin.name}</div>
+                    <button class="w-full py-1.5 rounded-lg font-cyber text-[10px] font-bold transition ${
+                      isEquipped
+                        ? "bg-slate-700 text-slate-300 cursor-default"
+                        : isUnlocked
+                          ? "bg-cyan-500 text-slate-950 hover:bg-cyan-400"
+                          : "bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:opacity-90"
+                    }">
+                        ${isEquipped ? "TANLANGAN" : isUnlocked ? "KIYISH" : "SOTIB OLISH"}
+                    </button>
+                `;
+
+          card.addEventListener("click", () => {
+            selectedPreviewSkinId = skin.id;
+            document.getElementById("previewSkinTitle").textContent = skin.name;
+            document.getElementById("previewSkinDesc").textContent = skin.desc;
+            document.getElementById("shopToast").classList.add("hidden");
+
+            if (isUnlocked) {
+              savedData.equippedSkin = skin.id;
+              persistSave();
+              syncHUD();
+              audio.buyOrEquip();
+            } else {
+              if (savedData.crystals >= skin.price) {
+                savedData.crystals -= skin.price;
+                savedData.unlockedSkins.push(skin.id);
+                savedData.equippedSkin = skin.id;
+                persistSave();
+                syncHUD();
+                audio.buyOrEquip();
+              } else {
+                document.getElementById("shopToast").classList.remove("hidden");
+              }
+            }
+            buildShopGrid();
+          });
+
+          grid.appendChild(card);
+        });
+      }
+
+      function openShop() {
+        audio.init();
+        selectedPreviewSkinId = savedData.equippedSkin;
+        const currentSkin = getEquippedSkinObj();
+        document.getElementById("previewSkinTitle").textContent =
+          currentSkin.name;
+        document.getElementById("previewSkinDesc").textContent =
+          currentSkin.desc;
+        document.getElementById("shopToast").classList.add("hidden");
+        syncHUD();
+
+        buildShopGrid();
+        shopOverlay.classList.remove("hidden");
+        shopOverlay.classList.add("flex");
+      }
+
+      function closeShop() {
+        shopOverlay.classList.add("hidden");
+        shopOverlay.classList.remove("flex");
+      }
+
+      // --- 12. BOSHQARUV HODISALARI (KLAVIATURA, SICHQONCHA, SENSOR) ---
+      window.addEventListener("keydown", (e) => {
+        if (gameState !== "PLAYING") return;
+        if (e.code === "Space" || e.code === "ArrowUp" || e.code === "KeyW") {
+          e.preventDefault();
+          player.jump();
+        } else if (e.code === "ArrowDown" || e.code === "KeyS") {
+          e.preventDefault();
+          player.fastDrop();
+        }
+      });
+
+      let touchStartY = 0;
+      canvas.addEventListener(
+        "touchstart",
+        (e) => {
+          if (gameState !== "PLAYING") return;
+          touchStartY = e.touches[0].clientY;
+          player.jump();
+        },
+        { passive: true },
+      );
+
+      canvas.addEventListener(
+        "touchmove",
+        (e) => {
+          if (gameState !== "PLAYING") return;
+          const dy = e.touches[0].clientY - touchStartY;
+          if (dy > 45) {
+            player.fastDrop();
+            touchStartY = e.touches[0].clientY;
+          }
+        },
+        { passive: true },
+      );
+
+      canvas.addEventListener("mousedown", (e) => {
+        if (gameState !== "PLAYING") return;
+        if (e.button === 0) {
+          player.jump();
+        }
+      });
+
+      // Qiyinlik darajasini tanlash tugmalari
+      document.querySelectorAll(".diff-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          audio.init();
+          audio.buyOrEquip();
+          savedData.selectedDifficulty = btn.getAttribute("data-diff");
+          persistSave();
+          syncHUD();
+        });
+      });
+
+      // Tugmalar
+      document
+        .getElementById("startBtn")
+        .addEventListener("click", startNewGame);
+      document
+        .getElementById("restartBtn")
+        .addEventListener("click", startNewGame);
+      document
+        .getElementById("openShopBtn")
+        .addEventListener("click", openShop);
+      document
+        .getElementById("openShopBtnQuick")
+        .addEventListener("click", openShop);
+      document
+        .getElementById("gameOverShopBtn")
+        .addEventListener("click", openShop);
+      document
+        .getElementById("closeShopBtn")
+        .addEventListener("click", closeShop);
+
+      document.getElementById("backToMenuBtn").addEventListener("click", () => {
+        gameState = "MENU";
+        gameOverOverlay.classList.add("hidden");
+        gameOverOverlay.classList.remove("flex");
+        menuOverlay.classList.remove("hidden");
+        menuOverlay.classList.add("flex");
+      });
+
+      document.getElementById("soundBtn").addEventListener("click", () => {
+        audio.init();
+        audio.enabled = !audio.enabled;
+        document
+          .getElementById("soundOnIcon")
+          .classList.toggle("hidden", !audio.enabled);
+        document
+          .getElementById("soundOffIcon")
+          .classList.toggle("hidden", audio.enabled);
+      });
+
+      // --- 13. ASOSIY TSIKL (MAIN LOOP) ---
+      let lastTimestamp = 0;
+      function mainLoop(timestamp) {
+        const dt = Math.min(0.05, (timestamp - lastTimestamp) / 1000);
+        lastTimestamp = timestamp;
+
+        updateGame(dt);
+        drawGame(dt);
+        renderSkinPreviews();
+
+        requestAnimationFrame(mainLoop);
+      }
+
+      window.onload = function () {
+        resizeCanvasToContainer();
+        lastTimestamp = performance.now();
+        requestAnimationFrame(mainLoop);
+      };
+    </script>
+  </body>
+</html>
